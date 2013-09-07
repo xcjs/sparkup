@@ -117,7 +117,7 @@ class BaseElement {
 		if(is_object($child) && ($child instanceof BaseElement || $child instanceof TextNode))
 			$this->children[] = $child;
 		else
-			throw new Exception('Argument "$child" must be of type BaseElement.');
+			throw new Exception('Argument "$child" must be of type BaseElement or TextNode.');
 	}
 
 	public function removeChild($child) {
