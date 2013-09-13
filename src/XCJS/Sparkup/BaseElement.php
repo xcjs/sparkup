@@ -13,6 +13,7 @@ class BaseElement {
 
 	private $children = array();
 
+	private $parent = null;
 
 	// Public Members ---------------------------------------------------------/
 
@@ -38,7 +39,7 @@ class BaseElement {
 					$this->addChild($text);
 				}
 				else
-					throw new Exception('The second constructor parameter must be either an array or string.');
+					throw new \Exception('The second constructor parameter must be either an array or string.');
 
 				break;
 		}
@@ -90,6 +91,9 @@ class BaseElement {
 			$output .= "\n" . $this->tab($depth) . '</' . $this->tag . '>';
 		}
 
+		if($depth == 0)
+			$output .= "\n";
+
 		return $output;
 	}
 
@@ -105,7 +109,11 @@ class BaseElement {
 
 	public function removeAttribute($key)
 	{
+		unset($this->attributes[$key]);
 
+		// After calling unset on an array element, the key is left behind.
+		// This resets the array to only hold keys with values.
+		$this->attributes = array_values($this->attributes);
 	}
 
 	public function removeAllAttributes()
@@ -114,19 +122,50 @@ class BaseElement {
 	}
 
 	public function addChild($child) {
-		if(is_object($child) && ($child instanceof BaseElement || $child instanceof TextNode))
+		if(is_object($child) && $child instanceof BaseElement) {
 			$this->children[] = $child;
+			$child->Parent($this);
+		}
+		else if(is_object($child) && $child instanceof TextNode) {
+			$this->children[] = $child;
+		}
 		else
-			throw new Exception('Argument "$child" must be of type BaseElement or TextNode.');
+			throw new \Exception('Argument "$child" must be of type BaseElement or TextNode.');
 	}
 
 	public function removeChild($child) {
+		$i = 0;
+		$removal = false;
+
 		if(is_int($child)) {
+			unset($this->children[$child]);
 
+			// After calling unset on an array element, the key is left behind.
+			// This resets the array to only hold keys with values.
+			$this->children = array_values($this->children);
+			$removal = true;
 		}
-		else if(is_object($child) && $child instanceof BaseElement) {
+		else if(is_object($child) && ($child instanceof BaseElement || $child instanceof TextNode)) {
+			while($i < count($this->children)) {
+				
+				if($this->children[$i] == $child) {
+					unset($this->children[$i]);
 
+					// After calling unset on an array element, the key is left behind.
+					// This resets the array to only hold keys with values.
+					$this->children = array_values($this->children);
+					
+					$removal = true;
+					break;
+				}
+
+				$i++;
+			}
 		}
+		else
+			throw new \Exception('Argument "$child" must be of type BaseElement, TextNode, or int.');
+
+		return $removal;
 	}
 
 	// Private Members --------------------------------------------------------/
@@ -153,7 +192,7 @@ class BaseElement {
 				$this->xml = $xml;
 			}
 			else
-				throw new Exception('Property "XMLSyntax" must be of type bool.');
+				throw new \Exception('Property "XMLSyntax" must be of type bool.');
 		}
 		else
 			return $this->xml;
@@ -167,7 +206,7 @@ class BaseElement {
 				$this->void = $void;
 			}
 			else
-				throw new Exception('Property "Void" must be of type bool.');
+				throw new \Exception('Property "Void" must be of type bool.');
 		}
 		else
 			return $this->void;
@@ -179,6 +218,17 @@ class BaseElement {
 
 	public function Attribute($key)	{
 		return $this->attributes[$key];
+	}
+
+	public function Parent($parent = null) {
+		if(isset($parent)) {
+			if($parent instanceof BaseElement)
+				$this->parent = $parent;
+			else
+				throw new \Exception('Property "Parent" must be of type BaseElement.');
+		}
+		else
+			return $this->parent;
 	}
 }
 
