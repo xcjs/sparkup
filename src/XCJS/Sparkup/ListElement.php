@@ -10,6 +10,8 @@ class ListElement extends BaseElement {
 	private $items = array();
 
 	public function __construct($items, $ordered = false) {		
+		$this->ordered = $ordered;
+
 		parent::__construct($ordered ? 'ol' : 'ul');
 		$this->items = $items;
 	}
@@ -18,6 +20,8 @@ class ListElement extends BaseElement {
 
 	public function write($recursive = true, $depth = 0) {
 		$containerEle = null;
+
+		$this->removeAllChildren();
 
 		foreach($this->items as $item) {
 			if(is_string($item))
@@ -39,7 +43,7 @@ class ListElement extends BaseElement {
 
 	public function addItem($item) {
 		if(is_string($item) || $item instanceof BaseElement)
-			$this->items[] = $item
+			$this->items[] = $item;
 		else
 			throw new \Exception('Parameter "$item" must be of type BaseElement or string.');
 	}
@@ -53,8 +57,14 @@ class ListElement extends BaseElement {
 	public function Ordered($ordered = null) {
 		if(isset($ordered))
 		{
-			if(is_bool($ordered))
+			if(is_bool($ordered)) {
 				$this->ordered = $ordered;
+
+				if($ordered)
+					$this->tag = 'ol';
+				else
+					$this->tag = 'ul';
+			}
 			else
 				throw new \Exception('Property "Ordered" must be of type boolean.');
 		}

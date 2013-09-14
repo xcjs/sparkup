@@ -5,15 +5,15 @@ namespace XCJS\Sparkup;
 class BaseElement {
 
 	// Member Variables -------------------------------------------------------/ 
-	private $tag = null;
-	private $xml = false;
-	private $void = false;
+	protected $tag = null;
+	protected $xml = false;
+	protected $void = false;
 
-	private $attributes = array();
+	protected $attributes = array();
 
-	private $children = array();
+	protected $children = array();
 
-	private $parent = null;
+	protected $parent = null;
 
 	// Public Members ---------------------------------------------------------/
 
@@ -168,6 +168,10 @@ class BaseElement {
 		return $removal;
 	}
 
+	public function removeAllChildren() {
+		$this->children = array();
+	}
+
 	// Private Members --------------------------------------------------------/
 
 	protected function tab($num) {
@@ -183,6 +187,17 @@ class BaseElement {
 	}
 
 	// Properties -------------------------------------------------------------/
+
+	public function Tag($tag = null) {
+		if(isset($tag)) {
+			if(is_string($tag))
+				$this->tag = $tag;
+			else
+				throw new \Exception('Property "Tag" must be of type string.');
+		}
+		else
+			return $this->tag;
+	}
 
 	public function XmlSyntax($xml = null) {
 		if(isset($xml))

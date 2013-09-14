@@ -34,6 +34,9 @@
 	$l = new ListElement(array('Item 1', 'Item 2', 'Item 3'));
 	echo $l->write();
 
-	$l = new ListElement(array(new BaseElement('p', 'Item 1'), new BaseElement('p', 'Item 2'), new BaseElement('p', 'Item 3')));
+	$l = new ListElement(array(new BaseElement('p', 'Element Item 1'), new BaseElement('p', 'Element Item 2'), new BaseElement('p', 'Element Item 3')));
+	echo $l->write();
+
+	$l->Ordered(true);
 	echo $l->write();
 ?>
