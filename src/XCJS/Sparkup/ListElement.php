@@ -2,7 +2,10 @@
 
 namespace XCJS\Sparkup;
 
-
+/**
+ * 
+ * @package Sparkup
+ */
 class ListElement extends BaseElement {
 	
 	// Member Variables -------------------------------------------------------/

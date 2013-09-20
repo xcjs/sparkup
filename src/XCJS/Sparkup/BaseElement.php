@@ -2,6 +2,10 @@
 
 namespace XCJS\Sparkup;
 
+/**
+ * 
+ * @package Sparkup
+ */
 class BaseElement {
 
 	// Member Variables -------------------------------------------------------/ 
