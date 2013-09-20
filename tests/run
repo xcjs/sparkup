@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd $(dirname $0)
+PHPUNIT=../vendor/phpunit/phpunit/composer/bin/phpunit
+$PHPUNIT $PWD
