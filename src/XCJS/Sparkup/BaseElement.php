@@ -113,11 +113,7 @@ class BaseElement {
 
 	public function removeAttribute($key)
 	{
-		unset($this->attributes[$key]);
-
-		// After calling unset on an array element, the key is left behind.
-		// This resets the array to only hold keys with values.
-		$this->attributes = array_values($this->attributes);
+		$this->attributes = $this->removeArrayItemByKey($this->attributes, $key);
 	}
 
 	public function removeAllAttributes()
@@ -188,6 +184,13 @@ class BaseElement {
 		}
 
 		return $tabs;
+	}
+
+	private function removeArrayItemByKey($array, $key) {
+		$filter = array($key);
+		$array = array_diff_key($this->attributes, array_flip($filter));
+
+		return $array;
 	}
 
 	// Properties -------------------------------------------------------------/

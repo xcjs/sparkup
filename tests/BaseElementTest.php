@@ -49,10 +49,16 @@ class BaseElementTest Extends PHPUnit_Framework_TestCase {
 		$result = null;
 
 		$Elem = new XCJS\Sparkup\BaseElement('div');
-
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		$Elem->setAttribute('class', 'test-div');
+		$Elem->setAttribute('id', 'js-test-div');
+		$Elem->removeAttribute('id');
+		$result = '<div class="test-div">' . "\n" . '</div>' . "\n";
+		$this->assertEquals($Elem->write(), $result);
 	}
 
+	/**
+	 * @depends testsetAttribute
+	 */
 	public function testremoveAllAttributes() {
 		$Elem = new XCJS\Sparkup\BaseElement('div');
 
