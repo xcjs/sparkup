@@ -31,7 +31,7 @@ class BaseElement {
 			case 1:
 				$this->tag = $args[0];
 				break;
-			// $this->tag, $this->attributes or $this->textNode
+			// $this->tag, $this->attributes or string converted to TextNode child
 			case 2:
 				$this->tag = $args[0];
 
