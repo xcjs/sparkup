@@ -1,9 +1,7 @@
 <?php
 
-$oldCWD = getcwd();
-chdir(__DIR__);
-
 require_once('../vendor/autoload.php');
+use XCJS\Sparkup\BaseElement as BaseElement;
 
 class BaseElementTest Extends PHPUnit_Framework_TestCase {
 
@@ -13,10 +11,12 @@ class BaseElementTest Extends PHPUnit_Framework_TestCase {
 		// Expected result.
 		$result = null;
 
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 		$Elem->setAttribute('class', 'test-div');
+
 		$result = array('class' => 'test-div');
-		$this->assertEquals($Elem->Attributes(), $result);
+
+		$this->assertEquals($result, $Elem->Attributes());
 	}
 
 	/**
@@ -26,7 +26,7 @@ class BaseElementTest Extends PHPUnit_Framework_TestCase {
 		// Expected result.
 		$result = null;
 
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 		$Elem->setAttribute('class', 'test-div');
 		$result = 'class, test-div';
 		foreach($Elem->Attributes() as $attr => $val) {
@@ -37,48 +37,72 @@ class BaseElementTest Extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($Elem->write(), $result);
 
 		$Elem->setAttribute('id', 'js-test-div');
+
 		$result = str_replace('<div class="test-div">', '<div class="test-div" id="js-test-div">', $result);
-		$this->assertEquals($Elem->write(), $result);
+		
+		$this->assertEquals($result, $Elem->write());
 	}
 
 	/**
 	 * @depends testsetAttribute
 	 */
 	public function testremoveAttribute() {
-		// Expected result;
+		// Expected result.
 		$result = null;
 
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 		$Elem->setAttribute('class', 'test-div');
 		$Elem->setAttribute('id', 'js-test-div');
 		$Elem->removeAttribute('id');
+
 		$result = '<div class="test-div">' . "\n" . '</div>' . "\n";
-		$this->assertEquals($Elem->write(), $result);
+
+		$this->assertEquals($result, $Elem->write());
 	}
 
 	/**
 	 * @depends testsetAttribute
 	 */
 	public function testremoveAllAttributes() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		// Expected result.
+		$result = null;
 
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		$Elem = new BaseElement('div');
+		$Elem->setAttribute('class', 'test-div');
+		$Elem->setAttribute('id', 'js-test-div');
+		$Elem->removeAllAttributes('id');
+
+		$result = '<div>' . "\n" . '</div>' . "\n";
+
+		$this->assertEquals($result, $Elem->write());
 	}
 
 	public function testaddChild() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$result = null;
 
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		$Elem = new BaseElement('div');
+		$Elem->addChild(new BaseElement('div'));
+
+		$result = '<div>' . "\n\t" . '<div>' . "\n\t" . '</div>' . "\n" . '</div>' . "\n";
+
+		$this->assertEquals($result, $Elem->write());
 	}
 
 	public function testremoveChild() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$result = null;
 
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		$Elem = new BaseElement('div');
+		$Child = new BaseElement('div');
+		$Elem->addChild($Child);
+		$Elem->removeChild(0);
+
+		$result = '<div>' . "\n" . '</div>' . "\n";
+
+		$this->assertEquals($result, $Elem->write());
 	}
 
 	public function removeAllChildren() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
@@ -86,7 +110,7 @@ class BaseElementTest Extends PHPUnit_Framework_TestCase {
 	// Test Private Functions -------------------------------------------------/
 
 	public function testTab() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
@@ -94,31 +118,31 @@ class BaseElementTest Extends PHPUnit_Framework_TestCase {
 	// Test Properties --------------------------------------------------------/
 
 	public function testTag() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	public function testXMLSyntax() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	public function testVoid() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	public function testAttribute() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	public function testParent() {
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
@@ -130,16 +154,14 @@ class BaseElementTest Extends PHPUnit_Framework_TestCase {
 		// Expected result.
 		$result = null;
 
-		$Elem = new XCJS\Sparkup\BaseElement('div');
+		$Elem = new BaseElement('div');
 		$result = '<div>' . "\n" . '</div>' . "\n";
 		$this->assertEquals($Elem->write(), $result);
 
-		$Elem = new XCJS\Sparkup\BaseElement('div', array('class' => 'test-div', 'id' => 'js-test-div'));
+		$Elem = new BaseElement('div', array('class' => 'test-div', 'id' => 'js-test-div'));
 		$result = '<div class="test-div" id="js-test-div">' . "\n" . '</div>' . "\n";
 		$this->assertEquals($Elem->write(), $result);
 	}	
 }
-
-chdir($oldCWD);
 
 ?>

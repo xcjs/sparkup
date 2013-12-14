@@ -138,23 +138,14 @@ class BaseElement {
 		$removal = false;
 
 		if(is_int($child)) {
-			unset($this->children[$child]);
-
-			// After calling unset on an array element, the key is left behind.
-			// This resets the array to only hold keys with values.
-			$this->children = array_values($this->children);
+			$this->children = $this->removeArrayItemByKey($this->children, $child);
 			$removal = true;
 		}
 		else if(is_object($child) && ($child instanceof BaseElement || $child instanceof TextNode)) {
 			while($i < count($this->children)) {
 				
 				if($this->children[$i] == $child) {
-					unset($this->children[$i]);
-
-					// After calling unset on an array element, the key is left behind.
-					// This resets the array to only hold keys with values.
-					$this->children = array_values($this->children);
-					
+					$this->children = $this->removeArrayItemByKey($this->children, $i);					
 					$removal = true;
 					break;
 				}
@@ -188,7 +179,7 @@ class BaseElement {
 
 	private function removeArrayItemByKey($array, $key) {
 		$filter = array($key);
-		$array = array_diff_key($this->attributes, array_flip($filter));
+		$array = array_diff_key($array, array_flip($filter));
 
 		return $array;
 	}
