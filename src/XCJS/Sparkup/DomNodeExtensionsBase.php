@@ -1,26 +1,39 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: diaruemnus
- * Date: 2/28/14
- * Time: 9:56 PM
- */
 
 namespace XCJS\Sparkup;
 
+class DomNodeExtensionsBase extends \DOMElement implements IDomNodeExtensions {
 
-class DomNodeExtensionsBase implements IDomNodeExtensions {
+    private $dataSource = null;
+    private $dom = null;
 
-    protected $dataSource = null;
+    public function __construct($tag)
+    {
+        parent::__construct($tag);
+        $this->dom = new \DOMDocument();
+    }
 
     public function getDataSource()
     {
-
+        return $this->dataSource;
     }
 
     public function setDataSource($source)
     {
+        if($this->verifyDataSource($source))
+        {
+            $this->dataSource = $source;
+        }
+    }
 
+    public function getDom()
+    {
+        return $this->dom;
+    }
+
+    protected function setDom($dom)
+    {
+        $this->dom = $dom;
     }
 
     public function databind()
@@ -28,8 +41,14 @@ class DomNodeExtensionsBase implements IDomNodeExtensions {
 
     }
 
-    private function verifyDataSource()
+    public function save()
     {
-        return false;
+        return $this->dom->saveXml($this->dom->documentElement);
+    }
+
+    protected function verifyDataSource($source)
+    {
+        // Force superclasses to verify data.
+        throw new \Exception('Not implemented');
     }
 }
