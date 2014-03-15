@@ -4,16 +4,20 @@ namespace XCJS\Sparkup;
 
 class ListElement extends DomNodeExtensionsBase {
 
+    const TAG_UNORDERED = 'ul';
+    const TAG_ORDERED = 'ol';
+
+    const TAG_LISTITEM = 'li';
 
     public function __construct($ordered = false)
     {
         if($ordered)
         {
-            parent::__construct('ol');
+            parent::__construct(ListElement::TAG_ORDERED);
         }
         else
         {
-            parent::__construct('ul');
+            parent::__construct(ListElement::TAG_UNORDERED);
         }
     }
 
@@ -21,7 +25,7 @@ class ListElement extends DomNodeExtensionsBase {
     {
         $ordered = new ListElement();
         $ordered->setDataSource($source);
-        $ordered->databind();
+        $ordered->render();
 
         return $ordered;
     }
@@ -30,37 +34,39 @@ class ListElement extends DomNodeExtensionsBase {
     {
         $unordered = new ListElement(true);
         $unordered->setDataSource($source);
-        $unordered->databind();
+        $unordered->render();
 
         return $unordered;
     }
 
-    public function databind()
+    public function render()
     {
-        $fragment = new \DOMDocument();
-        $fragment->formatOutput = true;
+        $dom = $this->getDom();
+        $fragment = $this->getDom()->createDocumentFragment();
 
-        $root = $fragment->appendChild($fragment->importNode($this, true));
+        $list = $fragment->appendChild($this);
 
         foreach($this->getDataSource() as $item)
         {
-            $textNode = $fragment->createTextNode($item);
-            $child = $fragment->createElement('li');
+            $textNode = $dom->createTextNode($item);
+            $listNode = $dom->createElement(ListElement::TAG_LISTITEM);
 
-            $child->appendChild($textNode);
-            $root->appendChild($child);
+            $listNode->appendChild($textNode);
+            $list->appendChild($listNode);
         }
 
-        $this->setDom($fragment);
+        $this->getDom()->appendChild($fragment);
     }
 
     protected function verifyDataSource($source)
     {
+        $valid = true;
+
         if(!is_array($source) || count($source) == 0)
         {
-            throw new \OutOfBoundsException("ListElement data sources must be an array with at least one element.");
+            $valid = false;
         }
 
-        return true;
+        return $valid;
     }
 }

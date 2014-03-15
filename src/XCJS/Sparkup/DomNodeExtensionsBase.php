@@ -11,6 +11,7 @@ class DomNodeExtensionsBase extends \DOMElement implements IDomNodeExtensions {
     {
         parent::__construct($tag);
         $this->dom = new \DOMDocument();
+        $this->dom->formatOutput = true;
     }
 
     public function getDataSource()
@@ -31,12 +32,7 @@ class DomNodeExtensionsBase extends \DOMElement implements IDomNodeExtensions {
         return $this->dom;
     }
 
-    protected function setDom($dom)
-    {
-        $this->dom = $dom;
-    }
-
-    public function databind()
+    public function render()
     {
 
     }
@@ -49,6 +45,6 @@ class DomNodeExtensionsBase extends \DOMElement implements IDomNodeExtensions {
     protected function verifyDataSource($source)
     {
         // Force superclasses to verify data.
-        throw new \Exception('Not implemented');
+        return false;
     }
 }

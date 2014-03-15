@@ -6,9 +6,11 @@ use \XCJS\Sparkup\ListElement;
 
 class ListElementTest Extends PHPUnit_Framework_TestCase {
 
+    private $items = array('Apple', 'Banana', 'Orange');
+
     public function testCreateUnorderedList()
     {
-        $listEle = ListElement::createUnorderedList(array('Apple', 'Banana', 'Orange'));
+        $listEle = ListElement::createUnorderedList($this->items);
         $expected = <<< OUT
 <ul>
   <li>Apple</li>
@@ -22,7 +24,7 @@ OUT;
 
     public function testCreateOrderedList()
     {
-        $listEle = ListElement::createOrderedList(array('Apple', 'Banana', 'Orange'));
+        $listEle = ListElement::createOrderedList($this->items);
         $expected = <<< OUT
 <ol>
   <li>Apple</li>
@@ -36,6 +38,14 @@ OUT;
 
     public function testVerifyDataSource()
     {
-        $this->markTestIncomplete();
+        $invalidDataSource = 'string';
+
+        $listEle = new ListElement();
+
+        $listEle->setDataSource($invalidDataSource);
+        $this->assertEquals(null, $listEle->getDataSource());
+
+        $listEle->setDataSource($this->items);
+        $this->assertEquals($this->items, $listEle->getDataSource());
     }
 }
